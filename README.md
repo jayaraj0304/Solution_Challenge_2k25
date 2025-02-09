@@ -29,6 +29,7 @@ Installation & Setup
 1. Clone the Repository
 
 git clone https://github.com/jayaraj0304/Solution_Challenge_2k25.git
+
 cd Solution_Challenge_2k25
 
 2. Setup API Keys
