@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookingAI - Recipe Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fix: Use the correct CDN URL for marked -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #FF4B6E;
+            --primary-dark: #E63E5C;
+            --secondary: #6B4BFF;
+            --accent: #4BFFB3;
+            --dark: #1A1B1E;
+            --light: #F8F9FA;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(107, 75, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(75, 255, 179, 0.1) 0%, transparent 40%),
+                url('https://images.unsplash.com/photo-1495195134817-aeb325a55b65?auto=format&fit=crop&w=2000&q=80');
+            background-blend-mode: screen;
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--light);
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background: linear-gradient(
+                45deg,
+                rgba(26, 27, 30, 0.97),
+                rgba(26, 27, 30, 0.95)
+            );
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { backdrop-filter: blur(5px) brightness(1); }
+            50% { backdrop-filter: blur(7px) brightness(0.95); }
+            100% { backdrop-filter: blur(5px) brightness(1); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        /* Form Elements */
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 75, 110, 0.2);
+            outline: none;
+        }
+
+        /* Neon Button */
+        .btn-neon {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-neon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn-neon:hover::before {
+            left: 100%;
+        }
+
+        .btn-neon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 75, 110, 0.4);
+        }
+
+        /* Recipe Content Styling */
+        .recipe-content {
+            color: var(--light);
+            line-height: 1.8;
+        }
+
+        .recipe-content h1,
+        .recipe-content h2,
+        .recipe-content h3 {
+            color: var(--primary);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+
+        .recipe-content ul,
+        .recipe-content ol {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .recipe-content li {
+            margin-bottom: 0.5em;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Loading Animation */
+        .loading-ring {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: loading-ring 1s linear infinite;
+        }
+
+        @keyframes loading-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <div class="min-h-screen p-4">
+        <nav class="glass-card mb-8 rounded-xl">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center space-x-8">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-robot text-2xl text-primary"></i>
+                            <h1 class="text-2xl font-bold text-primary">CookingAI</h1>
+                        </div>
+                        <div class="hidden sm:flex sm:space-x-8">
+                            <a href="/" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">
+                                <i class="fas fa-balance-scale mr-2"></i>Converter
+                            </a>
+                            <a href="/video" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">
+                                <i class="fas fa-video mr-2"></i>Video Analysis
+                            </a>
+                            <a href="/recipe" class="nav-link active text-white px-3 py-2 text-sm font-medium" aria-current="page">
+                                <i class="fas fa-utensils mr-2"></i>Recipe Generator
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="flex items-center justify-center">
+            <div class="max-w-3xl w-full glass-card p-8 rounded-xl fade-in-up">
+                <div class="text-center mb-8">
+                    <i class="fas fa-hat-chef text-4xl text-primary mb-4"></i>
+                    <h2 class="text-3xl font-bold mb-2">Recipe Generator</h2>
+                    <p class="text-gray-400">AI-powered recipe creation tailored to your taste</p>
+                </div>
+
+                <form id="recipeForm" class="space-y-6">
+                    <div>
+                        <input type="text" id="dish_name" name="dish_name" required
+                            class="form-input" placeholder="Enter the name of the dish">
+                    </div>
+
+                    <button type="submit" class="btn-neon w-full">
+                        <i class="fas fa-wand-magic-sparkles mr-2"></i>Generate Recipe
+                    </button>
+                </form>
+
+                <div id="loading" class="hidden mt-8 text-center">
+                    <div class="loading-ring mx-auto"></div>
+                    <p class="mt-4 text-gray-400">Crafting your perfect recipe...</p>
+                </div>
+
+                <div id="result" class="hidden mt-8 glass-card p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold mb-4 text-primary">
+                        <i class="fas fa-scroll mr-2"></i>Your Recipe
+                    </h3>
+                    <div id="recipe" class="recipe-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('recipeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const dish_name = document.getElementById('dish_name').value;
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+            const recipeDiv = document.getElementById('recipe');
+            
+            loadingDiv.classList.remove('hidden');
+            resultDiv.classList.add('hidden');
+
+            try {
+                const response = await fetch('/generate-recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ dish_name })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    recipeDiv.innerHTML = marked.parse(data.recipe);
+                    resultDiv.classList.remove('hidden');
+                    resultDiv.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert(data.error || 'Recipe generation failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                loadingDiv.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

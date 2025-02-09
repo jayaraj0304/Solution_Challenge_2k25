@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CulinaryAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+    
+    <!-- Hero Section -->
+    <div class="relative min-h-screen flex items-center bg-cover bg-center" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1581091226825-c6a89e7e4801?auto=format&fit=crop&q=80');">
+        <div class="container mx-auto px-6 py-20">
+            <div class="max-w-3xl">
+                <div class="flex items-center gap-2 mb-6">
+                    <i data-lucide="chef-hat" class="w-8 h-8 text-blue-400"></i>
+                    <span class="text-xl font-semibold">CulinaryAI</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    Your AI-Powered <span class="block text-blue-400">Kitchen Assistant</span>
+                </h1>
+                
+                <p class="text-xl text-gray-300 mb-8">
+                    Experience the future of cooking with our advanced AI chef. Perfect recipes, 
+                    personalized meal plans, and expert culinary guidance at your fingertips.
+                </p>
+                <form method="get" action="index.html"></form>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold flex items-center gap-2 transition-all transform hover:scale-105" >
+                    Get Started <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container mx-auto px-6 py-20">
+        <div class="grid md:grid-cols-3 gap-12">
+            <div class="bg-gray-800 p-8 rounded-xl hover:bg-gray-700 transition-all">
+                <div class="bg-blue-500/10 w-12 h-12 flex items-center justify-center rounded-lg mb-6">
+                    <i data-lucide="brain" class="w-6 h-6 text-blue-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Smart Recipe Analysis</h3>
+                <p class="text-gray-400">Advanced AI algorithms analyze and optimize recipes for perfect results every time.</p>
+            </div>
+
+            <div class="bg-gray-800 p-8 rounded-xl hover:bg-gray-700 transition-all">
+                <div class="bg-blue-500/10 w-12 h-12 flex items-center justify-center rounded-lg mb-6">
+                    <i data-lucide="utensils" class="w-6 h-6 text-blue-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Personalized Cooking</h3>
+                <p class="text-gray-400">Customized recipes and recommendations based on your preferences and dietary needs.</p>
+            </div>
+
+            <div class="bg-gray-800 p-8 rounded-xl hover:bg-gray-700 transition-all">
+                <div class="bg-blue-500/10 w-12 h-12 flex items-center justify-center rounded-lg mb-6">
+                    <i data-lucide="clock" class="w-6 h-6 text-blue-400"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Real-time Assistance</h3>
+                <p class="text-gray-400">Get instant cooking guidance and tips from our AI chef as you cook.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-8">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <i data-lucide="chef-hat" class="w-6 h-6 text-blue-400"></i>
+                <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+            </div>
+            <p>© 2024 CulinaryAI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
